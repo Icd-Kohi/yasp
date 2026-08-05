@@ -1,0 +1,68 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #111118;
+  color: #fff;
+  font-family: "Titillium Web", Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+a,
+button {
+  background: transparent;
+  border: 0;
+  border-right: 1px solid rgba(116, 68, 48, 0.24);
+  color: #17212b;
+  margin: 0;
+  padding: 5px 9px;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  background: #fff9;
+  color: #000;
+  cursor: pointer;
+  padding: 10px 14px;
+}
+
+button:hover {
+  text-decoration:underline;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input,
+select,
+textarea {
+  width: 50%;
+  border: 1px solid #c9d2dc;
+  padding: 10px;
+  background: #fff;
+}
+
+label {
+  display: block;
+  color: #5f7184;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
