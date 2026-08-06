@@ -2,6 +2,7 @@
 
 * {
   box-sizing: border-box;
+
 }
 
 body {
@@ -66,3 +67,21 @@ label {
   margin-bottom: 6px;
 }
 
+footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer-element{
+  margin-top: 5vh;
+}
+
+.wrapper{
+  background:
+  radial-gradient(black 15%, transparent 16%) 0 0,
+  radial-gradient(black 15%, transparent 16%) 8px 8px,
+  radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+  radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+  background-size:10px 10px;
+}

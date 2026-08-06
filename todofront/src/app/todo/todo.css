@@ -1,0 +1,35 @@
+input{
+  border-radius: 0.5vh;
+}
+
+button{
+  border-radius: 0.5vh;
+}
+
+p {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+}
+
+.site-page {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.div-todo{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+}
+
+.site-add-button{
+  margin: 5px;
+}
+
+.site-add-button:hover{
+  margin: 5px;
+  background-color: #fff;
+}
+
