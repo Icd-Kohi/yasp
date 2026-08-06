@@ -1,12 +1,16 @@
 input{
-  border-radius: 0.5vh;
+  border-radius: 0.1vh;
 }
 
 button{
-  border-radius: 0.5vh;
+  border-radius: 0.1vh;
+}
+button:hover{
+  box-shadow: 6px 6px 0px 0px #000;
 }
 
 p {
+  margin-top:10vh;
   display: flex;
   justify-content: center;
   align-items:center;
