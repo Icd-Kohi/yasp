@@ -1,5 +1,7 @@
 input{
+  width:90%;
   border-radius: 0.1vh;
+  margin: 5px;
 }
 
 button{
@@ -11,9 +13,6 @@ button:hover{
 
 p {
   margin-top:10vh;
-  display: flex;
-  justify-content: center;
-  align-items:center;
 }
 
 .site-page {
@@ -30,6 +29,8 @@ p {
 
 .site-add-button{
   margin: 5px;
+  border-radius: 2vh;
+  padding: 1vh 5vh 1vh 5vh;
 }
 
 .site-add-button:hover{
