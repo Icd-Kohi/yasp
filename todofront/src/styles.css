@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+:root{
+  --button-grey: #fff9;
+}
 
 * {
   box-sizing: border-box;
@@ -36,7 +39,7 @@ textarea {
 
 button {
   border: 0;
-  background: #fff9;
+  background: var(--button-grey);
   color: #000;
   cursor: pointer;
   padding: 10px 14px;
@@ -54,10 +57,9 @@ button:disabled {
 input,
 select,
 textarea {
-  width: 50%;
-  border: 1px solid #c9d2dc;
-  padding: 10px;
-  background: #fff;
+  border: 0.5px solid #000;
+  padding: 5px;
+  background-color: var(--button-grey);
 }
 
 label {
