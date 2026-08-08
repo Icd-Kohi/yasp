@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 })
 export class TodoComponent {
 
+
   nothing(): void{
 
   }
