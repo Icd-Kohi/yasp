@@ -1,8 +1,13 @@
 
 input{
   width:90%;
-  border-radius: 0.1vh;
+  border-radius: 1vh;
   margin: 5px;
+}
+
+input:focus{
+  border-left: 3px solid #fff;
+  outline: none;
 }
 
 button{
