@@ -18,6 +18,7 @@ export class TodoService {
 
   getTodos() {
     // handle paging
+    // TODO: refactor this
     if(!this.items){
       this.items = this.getTodoPage(0, this.todoPageSize)
         .pipe(
