@@ -7,7 +7,7 @@ import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap,
   providedIn: 'root',
 })
 export class TodoService {
-  private apiUrl = `/todos`;
+  private apiUrl = "/todos";
 
   // paging limit: 20 items
   private readonly todoPageSize = 20;
