@@ -51,3 +51,73 @@ p {
   background-color: #fff;
 }
 
+.todo-container{
+  padding-top: 3vh;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.todo-wraper{
+  display: flex;
+  color:grey;
+}
+
+.todo-table{
+  padding-top: 1vh;
+  color: grey;
+  width: 20%;
+}
+
+.thead-paused {
+  background-color: rgb(0, 0, 0, 0.7);
+  border: 1px solid grey;
+  border-radius: 1vh;
+}
+
+.PAUSED{
+  border: 1px solid grey;
+  border-radius: 1vh;
+}
+
+.thead-paused tr:hover{
+  cursor:pointer;
+  background-color: black;
+}
+
+
+.thead-todos{
+  background-color: rgb(0, 0, 0, 0.7);
+  border: 1px solid grey;
+  border-radius: 1vh;
+}
+
+.TODOS{
+  border: 1px solid grey;
+  border-radius: 1vh;
+}
+
+.thead-todos tr:hover{
+  cursor:pointer;
+  background-color: black;
+}
+
+
+
+
+.thead-done{
+  background-color: rgb(0, 0, 0, 0.7);
+  border: 1px solid grey;
+  border-radius: 1vh;
+}
+
+.DONE{
+  border-radius: 1vh;
+  border: 1px solid grey;
+}
+
+.thead-done tr:hover{
+  cursor:pointer;
+  background-color: black;
+}
+
