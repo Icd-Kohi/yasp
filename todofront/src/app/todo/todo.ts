@@ -68,4 +68,5 @@ export class TodoComponent implements OnInit{
 
   // Finished
 
+  // TODO: Frontend paging
 }
