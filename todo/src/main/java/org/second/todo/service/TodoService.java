@@ -16,7 +16,7 @@ public class TodoService {
     }
 
     public List<Todo> list(){
-        Sort sort = Sort.by(Sort.Direction.DESC,"priority")
+        Sort sort = Sort.by(Sort.Direction.ASC,"position")
                 .and(Sort.by(Sort.Direction.ASC,"id"));
 
         return todoRepository.findAll(sort);

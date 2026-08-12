@@ -18,22 +18,23 @@ public class Todo {
     @NotBlank
     private String description;
     private boolean done;
-    private int priority;
+    private int position;
 
     public Todo(){}
 
-    public Todo(Long id, String name, String description, boolean done, int priority) {
+    public Todo(Long id, String name, String description, boolean done, int position) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.done = done;
-        this.priority = priority;
+        this.position = position;
     }
 
-    public Todo(String name, String description, boolean done, int priority) {
+    public Todo(String name, String description, boolean done, int position) {
         this.name = name;
         this.description = description;
         this.done = done;
-        this.priority = priority;
+        this.position = position;
     }
+
 }

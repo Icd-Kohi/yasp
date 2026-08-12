@@ -32,7 +32,7 @@ class TodoApplicationTests {
                 .jsonPath("$[0].name").isEqualTo(todo.getName())
                 .jsonPath("$[0].description").isEqualTo(todo.getDescription())
                 .jsonPath("$[0].done").isEqualTo(todo.isDone())
-                .jsonPath("$[0].priority").isEqualTo(todo.getPriority());
+                .jsonPath("$[0].position").isEqualTo(todo.getPosition());
     }
 
     @Test

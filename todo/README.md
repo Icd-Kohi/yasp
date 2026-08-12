@@ -43,7 +43,7 @@ PUT :
           "name": "string",
           "description": "string",
           "done": true,
-          "priority": 0
+          "position": 0
         }'
 Request URL: http://${address}:${port}/todos
         
@@ -57,7 +57,7 @@ POST:
           "name": "string",
           "description": "string",
           "done": true,
-          "priority": 0
+          "position": 0
         }'
  Request URL: http://${address}:${port}/todos
   
@@ -75,7 +75,7 @@ POST:
     "name": "string",
     "description": "string",
     "done": true,
-    "priority": 0
+    "position": 0
   }
 ]
 ```
