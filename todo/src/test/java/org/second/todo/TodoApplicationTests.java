@@ -28,7 +28,7 @@ class TodoApplicationTests {
                 .expectBody()
                 .consumeWith(System.out::println)
                 .jsonPath("$").isArray()
-                .jsonPath("$.length()").isEqualTo(1)
+                .jsonPath("$.length()").isEqualTo(2)
                 .jsonPath("$[0].name").isEqualTo(todo.getName())
                 .jsonPath("$[0].description").isEqualTo(todo.getDescription())
                 .jsonPath("$[0].status").isEqualTo("ONGOING")
@@ -48,8 +48,34 @@ class TodoApplicationTests {
     }
 
     @Test
-    void TodoAppTestFail2() {
+    void TodoAppTestDeleteSuccess() {
+
+        webTestClient.delete()
+                .uri("/todos/{id}", 1)
+                .exchange().expectStatus().isOk();             
+
+    }
+
+    @Test
+    void TodoAppTestSetStatusSuccess(){
         // TODO more test cases
+        var todo = new Todo("test 2", "test description 2", 2);
+        todo.setStatus(Status.DONE);
+        webTestClient
+                .post()
+                .uri("/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(todo)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$").isArray()
+                .jsonPath("$.length()").isEqualTo(1)
+                .jsonPath("$[0].name").isEqualTo(todo.getName())
+                .jsonPath("$[0].description").isEqualTo(todo.getDescription())
+                .jsonPath("$[0].status").isEqualTo("DONE")
+                .jsonPath("$[0].position").isEqualTo(todo.getPosition());
     }
 
 }
