@@ -89,4 +89,4 @@ $ ./mvnw clean package
 $ java -jar target/todo-0.0.1-SNAPSHOT.jar
 ```
 
-Preferable to setup a `Dockerfile` + a `docker-compose.yml` file for the springboot app and postgresql database.
+Preferable to setup a `Dockerfile` + Kubernetes config or a `docker-compose.yml` file for the springboot app and postgresql database.
