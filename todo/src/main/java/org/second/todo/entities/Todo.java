@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.second.todo.enums.TodoStatus;
 
 @Entity
 @Table(name = "todos")
@@ -17,6 +18,10 @@ public class Todo {
     private String name;
     @NotBlank
     private String description;
+    
+    @Enumerated(EnumType.STRING)
+    private TodoStatus status;
+
     private boolean done;
     private int position;
 
@@ -36,5 +41,8 @@ public class Todo {
         this.done = done;
         this.position = position;
     }
-
+    
+    public boolean isDone(){
+        return this.status == Status.DONE;
+    }
 }
