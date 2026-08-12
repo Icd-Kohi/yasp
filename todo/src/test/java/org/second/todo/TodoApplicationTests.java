@@ -16,7 +16,7 @@ class TodoApplicationTests {
     private WebTestClient webTestClient;
     @Test
     void TodoAppTestPass() {
-        var todo = new Todo("test 1", "test description 1", false,  1);
+        var todo = new Todo("test 1", "test description 1",  1);
 
         webTestClient
                 .post()
@@ -31,7 +31,7 @@ class TodoApplicationTests {
                 .jsonPath("$.length()").isEqualTo(1)
                 .jsonPath("$[0].name").isEqualTo(todo.getName())
                 .jsonPath("$[0].description").isEqualTo(todo.getDescription())
-                .jsonPath("$[0].done").isEqualTo(todo.isDone())
+                .jsonPath("$[0].status").isEqualTo("ONGOING")
                 .jsonPath("$[0].position").isEqualTo(todo.getPosition());
     }
 
@@ -41,7 +41,7 @@ class TodoApplicationTests {
                 .post()
                 .uri("/todos")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new Todo("", "", false, 0))
+                .bodyValue(new Todo("", "", 0))
                 .exchange()
                 // collect then expect bad request
                 .expectStatus().isBadRequest();

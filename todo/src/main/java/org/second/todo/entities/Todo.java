@@ -2,6 +2,7 @@ package org.second.todo.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 import org.second.todo.enums.TodoStatus;
@@ -21,24 +22,22 @@ public class Todo {
     
     @Enumerated(EnumType.STRING)
     private TodoStatus status;
-
-    private boolean done;
+    
+    @Min(0)
     private int position;
 
     public Todo(){}
 
-    public Todo(Long id, String name, String description, boolean done, int position) {
+    public Todo(Long id, String name, String description, int position) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.done = done;
         this.position = position;
     }
 
-    public Todo(String name, String description, boolean done, int position) {
+    public Todo(String name, String description, int position) {
         this.name = name;
         this.description = description;
-        this.done = done;
         this.position = position;
     }
     
