@@ -42,7 +42,7 @@ PUT :
           "id": 0,
           "name": "string",
           "description": "string",
-          "done": true,
+          "status": ONGOING,
           "position": 0
         }'
 Request URL: http://${address}:${port}/todos
@@ -56,11 +56,12 @@ POST:
           "id": 0,
           "name": "string",
           "description": "string",
-          "done": true,
+          "status": "ONGOING",
           "position": 0
         }'
  Request URL: http://${address}:${port}/todos
-  
+ 
+ AFTER USER MOVE TODO TO "DONE" TABLE, THEN PRESSING `DELETE` BUTTON.
  DELETE: 
         curl -X 'DELETE' \
             'http://${address}:${port}/todos/{id}' \
@@ -74,7 +75,7 @@ POST:
     "id": 0,
     "name": "string",
     "description": "string",
-    "done": true,
+    "status": "DONE",
     "position": 0
   }
 ]
