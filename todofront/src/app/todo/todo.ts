@@ -14,27 +14,30 @@ import { TodoItem } from '../models/todo-model';
   styleUrl: './todo.css',
 })
 export class TodoComponent implements OnInit{
-  // readonly
-  readonly pageSize = 20;
+  readonly pageSize       = 20;
 
   // privates
-  private fb = inject(FormBuilder);
-  private todoService = inject(TodoService);
   private currentEditingTodo: TodoItem | undefined;
 
+  private fb              = inject(FormBuilder);
+  private todoService     = inject(TodoService);
   // locals
-  todos = signal<TodoItem[]>([]);
-  todoCatalog = signal<TodoItem[]>([]);
+  todos                   = signal<TodoItem[]>([]);
+  todoCatalog             = signal<TodoItem[]>([]);
 
-  isTodoCatalogLoaded = signal(false);
+  isTodoCatalogLoaded     = signal(false);
+  isSavingTodo            = signal(false);
 
-  todoTotal = signal(0);
-  todoPage = signal(0);
-  todoTotalPages = signal(0);
+  // Future TODO: Frontend paging
+  // Paging isn't going to be implemented for now.
+  todoTotal               = signal(0);
+  todoPage                = signal(0);
+  todoTotalPages          = signal(0);
 
-  todoCatalogErrorMessage =signal('');
+  todoCatalogErrorMessage = signal('');
 
-  // TODO: future filter
+  // FUTURE TODO: name filtering
+  // Filtering isn't going to be implemented for now.
   // -------
 
   // name.maxLength: 50 ; description.maxLength: 100 ;
@@ -45,12 +48,17 @@ export class TodoComponent implements OnInit{
 
   // methods
   ngOnInit(): void {
+    /* TODO: Catalog handling
     this.loadTodoCatalog();
+    */
+
+    // Load todo list.
+
   }
 
 
   // Ongoing
-
+  /*
   loadTodoCatalog(page = this.todoPage()): void {
     this.todoService.getTodoPage(page, this.pageSize).subscribe({
       next: todoPage => {
@@ -63,10 +71,29 @@ export class TodoComponent implements OnInit{
       error: () => this.todoCatalogErrorMessage.set("Couldn't load todos...")
     });
   }
+  */
+
+  submit(): void {
+    if(this.isSavingTodo()) {
+      return;
+    }
+
+    if(this.todoCatalogForm.invalid){
+      this.todoCatalogForm.markAllAsTouched();
+      return;
+    }
+
+    const raw = this.todoCatalogForm.getRawValue();
+    const payload = {
+        description: raw.description ?? '',
+    }
+  }
 
   // Paused
 
   // Finished
 
-  // TODO: Frontend paging
+  // todoPageNumber(page: number):void{
+  //
+  // }
 }
