@@ -13,8 +13,9 @@ export interface TodoResponse<T>{
 
 export interface TodoItem{
   id : number;
-  name: string;
-  description: string;
   done: boolean;
   priority: number;
+  // Fields below is Required.
+  name: string;
+  description: string;
 }
