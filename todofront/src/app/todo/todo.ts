@@ -4,12 +4,12 @@
 // Drag todo between cells.
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { TodoService } from '../services/todo-service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TodoItem } from '../models/todo-model';
 
 @Component({
   selector: 'app-todo',
-  imports: [],
+  imports: [ ReactiveFormsModule ],
   templateUrl: './todo.html',
   styleUrl: './todo.css',
 })
@@ -53,7 +53,6 @@ export class TodoComponent implements OnInit{
     */
 
     // Load todo list.
-
   }
 
 
@@ -85,8 +84,25 @@ export class TodoComponent implements OnInit{
 
     const raw = this.todoCatalogForm.getRawValue();
     const payload = {
+        done: false,
+        priority: 0,
+        name       : raw.name        ?? '',
         description: raw.description ?? '',
-    }
+    };
+
+    const request = this.todoService.postTodo(payload);
+    this.isSavingTodo.set(true);
+    request.subscribe({
+        next: () => {
+          // reset the forms
+          this.todoCatalogForm.reset({  name: '', description: '' });
+          this.isSavingTodo.set(false);
+        },
+        error: () => {
+          this.todoCatalogErrorMessage.set("Couldn't save todo.");
+          this.isSavingTodo.set(false);
+        }
+    })
   }
 
   // Paused
