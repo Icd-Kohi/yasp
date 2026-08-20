@@ -2,14 +2,18 @@
   <section class="content-card">
     <p>Todo integration</p>
     <div class="div-todo">
-      <form class="todo-form">
-        <input type="text" class="todo-input" placeholder="Type your todo name" required />
-        <input type="text" class="todo-input-description" placeholder="Type todo description" required />
-      </form>
+      <form class="todo-form"
+        [formGroup]="todoCatalogForm"
+        (submit)="submit()"
+        >
+        <input type="text" class="todo-input" placeholder="Type your todo name" formControlName="name" maxlength="50"/>
+        <input type="text" class="todo-input-description" placeholder="Type todo description" formControlName="description" maxlength="100"/>
       <button
-          type="button"
+          type="submit"
           class="site-add-button"
-          >Add</button>
+          [disabled]="isSavingTodo()"
+          >{{ isSavingTodo() ? 'Saving...' : 'Add'}}</button>
+      </form>
     </div>
   </section>
 
