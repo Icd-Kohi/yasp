@@ -105,6 +105,12 @@ export class TodoComponent implements OnInit{
     })
   }
 
+  delete(id : number): void{
+    // TODO: Check removed and reorder IDs.
+      this.todoService.deleteTodo(id).subscribe(({
+        error: () => this.todoCatalogErrorMessage.set('Couldnt delete todo'),
+      }));
+  }
   // Paused
 
   // Finished
