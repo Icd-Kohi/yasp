@@ -1,4 +1,7 @@
 # Project
+Overall backend structure from [`service-budget`](https://github.com/Icd-Kohi/service-budget) project.
+
+------------
 
 ##### Dependencies:
 ```
