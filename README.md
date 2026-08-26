@@ -1,4 +1,4 @@
-# yasp
-Yet another spring app
+# yasp / yawp
+Yet another spring app (or yet another web app)
 
-A collection of practice sessions using spring framework and other technologies.
+A collection of web study sessions using spring framework and other technologies.
