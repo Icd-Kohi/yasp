@@ -21,6 +21,7 @@ export class TodoComponent implements OnInit{
 
   private fb              = inject(FormBuilder);
   private todoService     = inject(TodoService);
+
   // locals
   todos                   = signal<TodoItem[]>([]);
   todoCatalog             = signal<TodoItem[]>([]);
