@@ -2,6 +2,7 @@ package org.second.todo;
 
 import org.junit.jupiter.api.Test;
 import org.second.todo.entities.Todo;
+import org.second.todo.enums.TodoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -60,7 +61,7 @@ class TodoApplicationTests {
     void TodoAppTestSetStatusSuccess(){
         // TODO more test cases
         var todo = new Todo("test 2", "test description 2", 2);
-        todo.setStatus(Status.DONE);
+        todo.setStatus(TodoStatus.DONE);
         webTestClient
                 .post()
                 .uri("/todos")

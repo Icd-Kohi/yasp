@@ -42,6 +42,6 @@ public class Todo {
     }
     
     public boolean isDone(){
-        return this.status == Status.DONE;
+        return this.status == TodoStatus.DONE;
     }
 }
