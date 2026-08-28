@@ -21,7 +21,7 @@ public class Todo {
     private String description;
     
     @Enumerated(EnumType.STRING)
-    private TodoStatus status;
+    private TodoStatus status = TodoStatus.ONGOING;
     
     @Min(0)
     private int position;
