@@ -56,23 +56,6 @@ export class TodoComponent implements OnInit{
     // Load todo list.
   }
 
-
-  // Ongoing
-  /*
-  loadTodoCatalog(page = this.todoPage()): void {
-    this.todoService.getTodoPage(page, this.pageSize).subscribe({
-      next: todoPage => {
-        this.todoTotal.set(todoPage.totalElements);
-        this.todoPage.set(todoPage.page);
-        this.todoTotalPages.set(todoPage.totalPages);
-        this.todos.set(todoPage.content);
-        this.todoCatalogErrorMessage.set('');
-      },
-      error: () => this.todoCatalogErrorMessage.set("Couldn't load todos...")
-    });
-  }
-  */
-
   submit(): void {
     if(this.isSavingTodo()) {
       return;
@@ -86,7 +69,7 @@ export class TodoComponent implements OnInit{
     const raw = this.todoCatalogForm.getRawValue();
     const payload = {
         done: false,
-        priority: 0,
+        position: 0,
         name       : raw.name        ?? '',
         description: raw.description ?? '',
     };
