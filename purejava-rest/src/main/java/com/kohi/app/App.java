@@ -15,7 +15,6 @@ class App {
         int serverPort = 8080;
         // Basic Java HTTP server.
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
-
         server.createContext("/api/hello", (exchange -> {
             String respText = "Hello\n";
             exchange.sendResponseHeaders(200, respText.getBytes().length);
