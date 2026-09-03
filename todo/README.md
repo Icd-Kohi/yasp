@@ -17,10 +17,12 @@
 todo 
     |_src
          |_main
+               |_config
                |_controller
-               |_service
                |_entities
+               |_enums
                |_repository
+               |_service
          |_tests
 ```
 #### API:
