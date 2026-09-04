@@ -16,13 +16,11 @@ import { TodoItem } from '../models/todo-model';
 export class TodoComponent implements OnInit{
   readonly pageSize       = 20;
 
-  // privates
   private currentEditingTodo: TodoItem | undefined;
 
   private fb              = inject(FormBuilder);
   private todoService     = inject(TodoService);
 
-  // locals
   todos                   = signal<TodoItem[]>([]);
   todoCatalog             = signal<TodoItem[]>([]);
 
@@ -37,17 +35,11 @@ export class TodoComponent implements OnInit{
 
   todoCatalogErrorMessage = signal('');
 
-  // FUTURE TODO: name filtering
-  // Filtering isn't going to be implemented for now.
-  // -------
-
-  // name.maxLength: 50 ; description.maxLength: 100 ;
   todoCatalogForm = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(50)]],
     description: ['', [Validators.required, Validators.maxLength(100)]],
   });
 
-  // methods
   ngOnInit(): void {
     /* TODO: Catalog handling
     this.loadTodoCatalog();
@@ -95,11 +87,4 @@ export class TodoComponent implements OnInit{
         error: () => this.todoCatalogErrorMessage.set('Couldnt delete todo'),
       }));
   }
-  // Paused
-
-  // Finished
-
-  // todoPageNumber(page: number):void{
-  //
-  // }
 }
