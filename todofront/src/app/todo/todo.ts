@@ -14,24 +14,17 @@ import { TodoItem } from '../models/todo-model';
   styleUrl: './todo.css',
 })
 export class TodoComponent implements OnInit{
-  readonly pageSize       = 20;
-
   private currentEditingTodo: TodoItem | undefined;
 
   private fb              = inject(FormBuilder);
   private todoService     = inject(TodoService);
 
-  todos                   = signal<TodoItem[]>([]);
-  todoCatalog             = signal<TodoItem[]>([]);
 
   isTodoCatalogLoaded     = signal(false);
   isSavingTodo            = signal(false);
 
   // Future TODO: Frontend paging
   // Paging isn't going to be implemented for now.
-  todoTotal               = signal(0);
-  todoPage                = signal(0);
-  todoTotalPages          = signal(0);
 
   todoCatalogErrorMessage = signal('');
 
@@ -45,16 +38,15 @@ export class TodoComponent implements OnInit{
     this.loadTodoCatalog();
     */
 
-    // Load todo list.
+    // Load list.
+    this.todoService.getTodos().subscribe();
   }
 
   submit(): void {
-    if(this.isSavingTodo()) {
-      return;
-    }
+    // TODO: Submit to this.todos, and call refresh todos future method.
 
-    if(this.todoCatalogForm.invalid){
-      this.todoCatalogForm.markAllAsTouched();
+    if(this.isSavingTodo()) {
+      this.isSavingTodo.set(false);
       return;
     }
 
@@ -74,7 +66,8 @@ export class TodoComponent implements OnInit{
           this.todoCatalogForm.reset({  name: '', description: '' });
           this.isSavingTodo.set(false);
         },
-        error: () => {
+        error: (err) => {
+          console.error(`Error: ${err}\n`);
           this.todoCatalogErrorMessage.set("Couldn't save todo.");
           this.isSavingTodo.set(false);
         }
