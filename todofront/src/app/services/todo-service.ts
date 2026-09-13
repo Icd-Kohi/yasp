@@ -23,6 +23,13 @@ export class TodoService {
     this.itemSignal.set(todos);
   }
 
+  getTodoLen() {
+    if(!this.items){
+      return 0;
+    }
+    return this.items.length;
+  }
+
   getTodos() : Observable<TodoItem[]> {
       return this.http.get<TodoItem[]>(this.apiUrl)
       .pipe(
