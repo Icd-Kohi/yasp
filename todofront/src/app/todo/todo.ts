@@ -44,6 +44,7 @@ export class TodoComponent implements OnInit{
 
   submit(): void {
     // TODO: Submit to this.todos, and call refresh todos future method.
+    let todoLen = this.todoService.getTodoLen() + 1;
 
     if(this.isSavingTodo()) {
       this.isSavingTodo.set(false);
@@ -52,14 +53,16 @@ export class TodoComponent implements OnInit{
 
     const raw = this.todoCatalogForm.getRawValue();
     const payload = {
-        done: false,
-        position: 0,
+        done       : false,
+        position   : todoLen,
         name       : raw.name        ?? '',
         description: raw.description ?? '',
     };
 
     const request = this.todoService.postTodo(payload);
     this.isSavingTodo.set(true);
+
+    // TODO: refactor
     request.subscribe({
         next: () => {
           // reset the forms
