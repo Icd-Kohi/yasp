@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable , signal } from '@angular/core';
 import { TodoResponse, TodoItem } from '../models/todo-model';
 import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
 
@@ -7,70 +7,48 @@ import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap,
   providedIn: 'root',
 })
 export class TodoService {
-  //TODO: if in production, append an env variable to the apiUrl.
+  // This is just a placeholder url.
+  // If in production, append an env variable to the apiUrl.
   private apiUrl = "http://localhost:8080/todos";
 
   // paging limit: 20 items
   private readonly todoPageSize = 20;
-  //
-  private items? : Observable<TodoItem[]>;
+
+  private itemSignal  = signal<TodoItem[]>([]);
+  private readonly items = this.itemSignal.asReadonly();
 
   constructor(private http: HttpClient){};
 
-  getTodos() {
-    // handle paging
-    // TODO: refactor this
-    if(!this.items){
-      this.items = this.getTodoPage(0, this.todoPageSize)
-        .pipe(
-            switchMap(firstPage => {
-              if(firstPage.totalPages <= 1){
-                return of(firstPage.content);
-            }
-
-            const remainingPage = Array.from(
-                { length: firstPage.totalPages - 1 },
-                (_, index) => this.getTodoPage( index + 1, this.todoPageSize)
-                .pipe(
-                  map(page => page.content))
-              );
-              return forkJoin(remainingPage)
-                .pipe(
-                  map(pages => [firstPage.content, ...pages].flat())
-              );
-          }),
-          catchError(error => {
-            this.invalidateTodo();
-            return throwError(() => error);
-          }),
-          shareReplay({ bufferSize: 1, refCount: false })
-      );
-    }
-    return this.items;
+  setTodos(todos: TodoItem[]) {
+    this.itemSignal.set(todos);
   }
 
-  getTodoPage(page = 0, size = this.todoPageSize){
+  getTodos() : Observable<TodoItem[]> {
+      return this.http.get<TodoItem[]>(this.apiUrl)
+      .pipe(
+        tap((todos) => this.itemSignal.set(todos))
+      );
+  }
+
+  getTodoPage(page = 0, size = this.todoPageSize) : Observable<TodoResponse<TodoItem>>{
     return this.http.get<TodoResponse<TodoItem>>(this.apiUrl, {
       params: { page, size },
     });
   }
 
-  postTodo(data: Omit<TodoItem, 'id'>){
+  postTodo(data: Omit<TodoItem, 'id'>) : Observable<TodoItem> {
     return this.http.post<TodoItem>(this.apiUrl, data)
     .pipe(tap(() => this.invalidateTodo()));
   }
 
-  updateTodo(id: number, data: Omit<TodoItem, 'id'>){
+  updateTodo(id: number, data: Omit<TodoItem, 'id'>) : Observable<TodoItem> {
     return this.http.put<TodoItem>(`${this.apiUrl}/${id}`, data)
-    .pipe(
-      tap(() => this.invalidateTodo())
-    );
+      .pipe(tap(() => this.invalidateTodo()));
   }
 
-  deleteTodo(id: number){
+  deleteTodo(id: number) : Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`)
-    .pipe(tap(() => this.invalidateTodo())
-    );
+      .pipe(tap(() => this.invalidateTodo()));
   }
 
   // a fallback
