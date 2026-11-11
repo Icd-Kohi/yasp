@@ -10,7 +10,7 @@ import { Observable, tap} from 'rxjs';
 export class TodoService {
   // This is just a placeholder url.
   // If in production, append an env variable to the apiUrl.
-  private apiUrl = `${environment.apiEndpoint}/todos`;
+  private readonly apiUrl = `${environment.apiEndpoint}/todos`;
 
   // paging limit: 20 items
   private readonly todoPageSize = 20;
