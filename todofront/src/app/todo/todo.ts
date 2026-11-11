@@ -6,7 +6,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodoService } from '../services/todo-service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TodoItem } from '../models/todo-model';
+import { TodoItem, TodoStatus } from '../models/todo-model';
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -17,13 +17,9 @@ import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
   styleUrl: './todo.css',
 })
 export class TodoComponent implements OnInit{
-  private currentEditingTodo: TodoItem | undefined;
-
-  private fb                = inject(FormBuilder);
-  protected todoService     = inject(TodoService);
-
-
-
+  private fb                       = inject(FormBuilder);
+  protected todoService            = inject(TodoService);
+searchTerm
   readonly isTodoCatalogLoaded     = signal(false);
   readonly isSavingTodo            = signal(false);
   readonly isLoading               = signal(false);
@@ -128,5 +124,40 @@ export class TodoComponent implements OnInit{
       this.todoService.deleteTodo(id).subscribe(({
         error: () => this.todoCatalogErrorMessage.set('Couldnt delete todo'),
       }));
+  }
+
+  updateStatus(todo: TodoItem, newStatus: TodoStatus): void{
+    if(!todo.id || todo.status == newStatus) return;
+
+    this.todoCatalogErrorMessage.set('');
+    this.todoService.updateStatus(todo, newStatus).subscribe({
+      next: () => {},
+      error: (err) => {
+        console.error('Error updating status: ', err);
+        this.todoCatalogErrorMessage.set('Couldn\'t update todo status.');
+      }
+    })
+  }
+
+  onDrop(event: CdkDragDrop<TodoItem[]>, targetStatus: TodoStatus): void {
+    const item = event.item.data as TodoItem;
+    if(!item) return;
+
+    if(item.status !== targetStatus){
+      this.updateStatus(item, targetStatus);
+    }
+  }
+
+  onSearchChange(event: Event): void{
+    const input = event.target as HTMLInputElement;
+    this.searchName.set(input.value);
+  }
+
+  clearSearch(): void{
+    this.searchTerm.set('');
+  }
+
+  dismissError(): void{
+    this.todoCatalogErrorMessage.set('');
   }
 }
