@@ -15,7 +15,7 @@ export class TodoService {
   private readonly todoPageSize = 20;
 
   private itemSignal  = signal<TodoItem[]>([]);
-  private readonly items = this.itemSignal.asReadonly();
+  readonly items = this.itemSignal.asReadonly();
 
   constructor(private http: HttpClient){};
 
