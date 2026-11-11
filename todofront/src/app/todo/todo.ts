@@ -19,7 +19,7 @@ import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 export class TodoComponent implements OnInit{
   private fb                       = inject(FormBuilder);
   protected todoService            = inject(TodoService);
-searchTerm
+
   readonly isTodoCatalogLoaded     = signal(false);
   readonly isSavingTodo            = signal(false);
   readonly isLoading               = signal(false);
