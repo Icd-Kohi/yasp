@@ -154,7 +154,7 @@ export class TodoComponent implements OnInit{
   }
 
   clearSearch(): void{
-    this.searchTerm.set('');
+    this.searchName.set('');
   }
 
   dismissError(): void{
