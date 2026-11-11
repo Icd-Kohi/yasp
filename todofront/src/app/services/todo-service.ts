@@ -20,29 +20,29 @@ export class TodoService {
 
   constructor(private http: HttpClient){};
 
-  setTodos(todos: TodoItem[]) : void {
+  setTodos(todos: TodoItem[]): void {
     this.itemSignal.set(todos);
   }
 
-  getTodoLen() : number{
+  getTodoLen(): number{
     if(!this.items){
       return 0;
     }
     return this.items().length;
   }
 
-  getTodos() : Observable<TodoItem[]> {
+  getTodos(): Observable<TodoItem[]> {
       return this.http.get<TodoItem[]>(this.apiUrl)
       .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
 
-  getTodoPage(page = 0, size = this.todoPageSize) : Observable<TodoResponse<TodoItem>>{
+  getTodoPage(page = 0, size = this.todoPageSize): Observable<TodoResponse<TodoItem>>{
     return this.http.get<TodoResponse<TodoItem>>(this.apiUrl, {
       params: { page, size },
     });
   }
 
-  postTodo(data: Omit<TodoItem, 'id'>) : Observable<TodoItem[]> {
+  postTodo(data: Omit<TodoItem, 'id'>): Observable<TodoItem[]> {
     return this.http.post<TodoItem[]>(this.apiUrl, data)
       .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
@@ -52,7 +52,7 @@ export class TodoService {
       .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
 
-  deleteTodo(id: number) : Observable<TodoItem[]> {
+  deleteTodo(id: number): Observable<TodoItem[]> {
     return this.http.delete<TodoItem[]>(`${this.apiUrl}/${id}`)
       .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
@@ -63,5 +63,9 @@ export class TodoService {
       status: newStatus,
     };
     return this.updateTodo(updated);
+  }
+
+  clearTodos(): void {
+    this.itemSignal.set([]);
   }
 }
