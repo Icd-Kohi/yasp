@@ -2,36 +2,65 @@
 // Search name bar
 // 3 cells -> Paused | Ongoing | Finished
 // Drag todo between cells.
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TodoService } from '../services/todo-service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TodoItem } from '../models/todo-model';
+import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-todo',
-  imports: [ ReactiveFormsModule ],
+  standalone:true,
+  imports: [ CommonModule, ReactiveFormsModule, DragDropModule],
   templateUrl: './todo.html',
   styleUrl: './todo.css',
 })
 export class TodoComponent implements OnInit{
   private currentEditingTodo: TodoItem | undefined;
 
-  private fb              = inject(FormBuilder);
-  private todoService     = inject(TodoService);
+  private fb                = inject(FormBuilder);
+  protected todoService     = inject(TodoService);
 
 
-  isTodoCatalogLoaded     = signal(false);
-  isSavingTodo            = signal(false);
+
+  readonly isTodoCatalogLoaded     = signal(false);
+  readonly isSavingTodo            = signal(false);
+  readonly isLoading               = signal(false);
+  readonly todoCatalogErrorMessage = signal('');
+  readonly searchName              = signal('');
 
   // Future TODO: Frontend paging
   // Paging isn't going to be implemented for now.
 
-  todoCatalogErrorMessage = signal('');
 
   todoCatalogForm = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(50)]],
     description: ['', [Validators.required, Validators.maxLength(100)]],
   });
+
+  readonly filteredTodos = computed(() => {
+    const name = this.searchName().toLowerCase().trim();
+    const items = this.todoService.items();
+    if (!name) return items;
+
+    return items.filter(
+      (todo) => todo.name?.toLowerCase().includes(name) || todo.description?.toLowerCase().includes(name)
+    );
+  })
+
+  readonly pausedTodos = computed(() =>
+    this.filteredTodos().filter((todo) => todo.status === 'PAUSED')
+  );
+
+  readonly ongoingTodos = computed(() => {
+    this.filteredTodos().filter((todo) => todo.status === 'ONGOING')
+  });
+
+  readonly doneTodos = computed(() => {
+    this.filteredTodos().filter((todo) => todo.status === 'DONE')
+  });
+
 
   ngOnInit(): void {
     /* TODO: Catalog handling
@@ -39,42 +68,59 @@ export class TodoComponent implements OnInit{
     */
 
     // Load list.
-    this.todoService.getTodos().subscribe();
+    this.loadTodos();
+  }
+
+  loadTodos(): void {
+    this.isLoading.set(true);
+    this.todoService.getTodos().subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.todoCatalogErrorMessage.set('');
+      },
+      error: (err) => {
+        console.error('Error loading todos: ', err);
+        this.todoCatalogErrorMessage.set('Couldn\'t connect to the backend');
+        this.isLoading.set(false);
+      },
+    });
   }
 
   submit(): void {
     // TODO: Submit to this.todos, and call refresh todos future method.
-    let todoLen = this.todoService.getTodoLen() + 1;
+    if (this.todoCatalogForm.invalid) {
+      this.todoCatalogForm.markAllAsTouched();
+      return;
+    }
 
-    if(this.isSavingTodo()) {
-      this.isSavingTodo.set(false);
+    if (this.isSavingTodo()) {
       return;
     }
 
     const raw = this.todoCatalogForm.getRawValue();
-    const payload = {
-        done       : false,
-        position   : todoLen,
-        name       : raw.name        ?? '',
-        description: raw.description ?? '',
+    const nextPosition = this.todoService.getTodoLen() + 1;
+
+    const payload: Omit<TodoItem, 'id'> = {
+      name: (raw.name ?? '').trim(),
+      description: (raw.description ?? '').trim(),
+      status: 'ONGOING',
+      position: nextPosition,
     };
 
-    const request = this.todoService.postTodo(payload);
     this.isSavingTodo.set(true);
+    this.todoCatalogErrorMessage.set('');
 
-    // TODO: refactor
-    request.subscribe({
-        next: () => {
-          // reset the forms
-          this.todoCatalogForm.reset({  name: '', description: '' });
-          this.isSavingTodo.set(false);
-        },
-        error: (err) => {
-          console.error(`Error: ${err}\n`);
-          this.todoCatalogErrorMessage.set("Couldn't save todo.");
-          this.isSavingTodo.set(false);
-        }
-    })
+    this.todoService.postTodo(payload).subscribe({
+      next: () => {
+        this.todoCatalogForm.reset({ name: '', description: '' });
+        this.isSavingTodo.set(false);
+      },
+      error: (err) => {
+        console.error('Error saving todo:', err);
+        this.todoCatalogErrorMessage.set('Could not save todo.');
+        this.isSavingTodo.set(false);
+      },
+    });
   }
 
   delete(id : number): void{
