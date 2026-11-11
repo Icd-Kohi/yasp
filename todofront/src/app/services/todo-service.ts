@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable , signal } from '@angular/core';
-import { TodoResponse, TodoItem } from '../models/todo-model';
-import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { TodoResponse, TodoItem, TodoStatus } from '../models/todo-model';
+import { environment } from '../../environments/environment';
+import { Observable, tap} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap,
 export class TodoService {
   // This is just a placeholder url.
   // If in production, append an env variable to the apiUrl.
-  private apiUrl = "http://localhost:8080/todos";
+  private apiUrl = `${environment.apiEndpoint}/todos`;
 
   // paging limit: 20 items
   private readonly todoPageSize = 20;
@@ -23,18 +24,16 @@ export class TodoService {
     this.itemSignal.set(todos);
   }
 
-  getTodoLen() {
+  getTodoLen() : number{
     if(!this.items){
       return 0;
     }
-    return this.items.length;
+    return this.items().length;
   }
 
   getTodos() : Observable<TodoItem[]> {
       return this.http.get<TodoItem[]>(this.apiUrl)
-      .pipe(
-        tap((todos) => this.itemSignal.set(todos))
-      );
+      .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
 
   getTodoPage(page = 0, size = this.todoPageSize) : Observable<TodoResponse<TodoItem>>{
@@ -43,23 +42,26 @@ export class TodoService {
     });
   }
 
-  postTodo(data: Omit<TodoItem, 'id'>) : Observable<TodoItem> {
-    return this.http.post<TodoItem>(this.apiUrl, data)
-    .pipe(tap(() => this.invalidateTodo()));
+  postTodo(data: Omit<TodoItem, 'id'>) : Observable<TodoItem[]> {
+    return this.http.post<TodoItem[]>(this.apiUrl, data)
+      .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
 
-  updateTodo(id: number, data: Omit<TodoItem, 'id'>) : Observable<TodoItem> {
-    return this.http.put<TodoItem>(`${this.apiUrl}/${id}`, data)
-      .pipe(tap(() => this.invalidateTodo()));
+  updateTodo(todo: TodoItem): Observable<TodoItem[]> {
+    return this.http.put<TodoItem[]>(this.apiUrl, todo)
+      .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
 
-  deleteTodo(id: number) : Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`)
-      .pipe(tap(() => this.invalidateTodo()));
+  deleteTodo(id: number) : Observable<TodoItem[]> {
+    return this.http.delete<TodoItem[]>(`${this.apiUrl}/${id}`)
+      .pipe(tap((todos) => this.itemSignal.set(todos)));
   }
 
-  // a fallback
-  private invalidateTodo(): void{
-    this.items = undefined;
+  updateStatus(todo: TodoItem, newStatus: TodoStatus): Observable<TodoItem[]> {
+    const updated: TodoItem = {
+      ...todo,
+      status: newStatus,
+    };
+    return this.updateTodo(updated);
   }
 }
