@@ -12,10 +12,11 @@ export interface TodoResponse<T>{
 }
 
 export interface TodoItem{
-  id : number;
-  done: boolean;
+  id?: number;
+  done?: boolean;
   position: number;
   // Fields below is Required.
+  status: TodoStatus;
   name: string;
   description: string;
 }
