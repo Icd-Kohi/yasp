@@ -19,7 +19,7 @@ export class TodoService {
 
   constructor(private http: HttpClient){};
 
-  setTodos(todos: TodoItem[]) {
+  setTodos(todos: TodoItem[]) : void {
     this.itemSignal.set(todos);
   }
 
