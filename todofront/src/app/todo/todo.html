@@ -1,4 +1,11 @@
 <main class="site-page">
+  @if (todoCatalogErrorMessage()){
+    <div class="error-banner" role="alert">
+      <span>{{ todoCatalogErrorMessage() }}</span>
+      <button type="button" class="dismiss-btn" (click)="dismissError()">✕</button>
+    </div>
+  }
+
   <section class="content-card">
     <p>Todo integration</p>
     <div class="div-todo">
@@ -6,15 +13,31 @@
         [formGroup]="todoCatalogForm"
         (submit)="submit()"
         >
-        <input type="text" class="todo-input" placeholder="Type your todo name" formControlName="name" maxlength="50"/>
-        <input type="text" class="todo-input-description" placeholder="Type todo description" formControlName="description" maxlength="100"/>
+        <input type="text" class="todo-input" placeholder="Type your todo name" formControlName="name" maxlength="50" required/>
+        <input type="text" class="todo-input-description" placeholder="Type todo description" formControlName="description" maxlength="100" required/>
       <button
           type="submit"
           class="site-add-button"
-          [disabled]="isSavingTodo()"
-          >{{ isSavingTodo() ? 'Saving...' : 'Add'}}</button>
+          [disabled]="isSavingTodo() || todoCatalogForm.invalid"
+          >{{ isSavingTodo() ? 'Saving...' : 'Add'}}
+      </button>
       </form>
     </div>
+
+    <div class="search-bar-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search todos by name or description..."
+        [value]="searchName()"
+        (input)="onSearchChange($event)"
+      />
+      @if (searchName()) {
+        <button type="button" class="site-add-button" (click)="clearSearch()">Clear</button>
+      }
+    </div>
+
+
   </section>
 
 </main>
@@ -25,7 +48,49 @@
     <thead class="thead-paused">
       <tr>
         <th class="PAUSED">PAUSED</th>
+        <th >{{ pausedTodos().length }}</th>
       </tr>
+      <div
+          cdkDropList
+          id="paused-table"
+          [cdkDropListData]="pausedTodos()"
+          (cdkDropListDropped)="onDrop($event, 'PAUSED')"
+          class="paused-table"
+          >
+          @for (todo of pausedTodos(); track todo.id) {
+          <div cdkDrag [cdkDragData]="todo" class="todo-card">
+            <div class="card-content">
+              <div class="card-title">{{ todo.name }}</div>
+              <div class="card-description">{{ todo.description }}</div>
+              <div class="card-meta">
+                <span class="position-tag">#{{ todo.position }}</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button
+                  type="button"
+                  class="action-btn resume-btn"
+                  title="Resume task"
+                  (click)="updateStatus(todo, 'ONGOING')"
+                  >resume</button>
+              <button
+                  type="button"
+                  class="action-btn done-btn"
+                  title="Mark as done"
+                  (click)="updateStatus(todo, 'DONE')"
+                  >done</button>
+              <button
+                  type="button"
+                  class="action-btn delete-btn"
+                  title="Delete task"
+                  (click)="delete(todo.id)"
+                  >del</button>
+            </div>
+          </div>
+          } @empty {
+          <div class="empty-placeholder">No paused todos</div>
+          }
+      </div>
     </thead>
     <tbody>
     </tbody>
@@ -35,7 +100,50 @@
     <thead class="thead-todos">
       <tr>
         <th class="TODOS">TODOS</th>
+        <th >{{ ongoingTodos().length }}</th>
       </tr>
+      <div
+        cdkDropList
+        id="ongoing-list"
+        [cdkDropListData]="ongoingTodos()"
+        (cdkDropListDropped)="onDrop($event, 'ONGOING')"
+        class="kanban-card-list"
+      >
+        @for (todo of ongoingTodos(); track todo.id) {
+          <div cdkDrag [cdkDragData]="todo" class="todo-card">
+            <div class="card-content">
+              <div class="card-title">{{ todo.name }}</div>
+              <div class="card-description">{{ todo.description }}</div>
+              <div class="card-meta">
+                <span class="position-tag">#{{ todo.position }}</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button
+                type="button"
+                class="action-btn pause-btn"
+                title="Pause task"
+                (click)="updateStatus(todo, 'PAUSED')"
+              >pause</button>
+              <button
+                type="button"
+                class="action-btn done-btn"
+                title="Mark as done"
+                (click)="updateStatus(todo, 'DONE')"
+              >done</button>
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                title="Delete task"
+                (click)="delete(todo.id)"
+              >del</button>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-placeholder">No ongoing tasks</div>
+        }
+      </div>
+
     </thead>
     <tbody>
     </tbody>
@@ -45,7 +153,44 @@
     <thead class="thead-done">
       <tr>
         <th class="DONE">DONE</th>
+        <th>{{ doneTodos().length }}</th>
       </tr>
+      <div
+        cdkDropList
+        id="done-list"
+        [cdkDropListData]="doneTodos()"
+        (cdkDropListDropped)="onDrop($event, 'DONE')"
+        class="kanban-card-list"
+      >
+        @for (todo of doneTodos(); track todo.id) {
+          <div cdkDrag [cdkDragData]="todo" class="todo-card done-card">
+            <div class="card-content">
+              <div class="card-title card-title-done">{{ todo.name }}</div>
+              <div class="card-description">{{ todo.description }}</div>
+              <div class="card-meta">
+                <span class="position-tag">#{{ todo.position }}</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button
+                type="button"
+                class="action-btn reopen-btn"
+                title="Reopen to Ongoing"
+                (click)="updateStatus(todo, 'ONGOING')"
+              >restart</button>
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                title="Delete task"
+                (click)="delete(todo.id)"
+              >del</button>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-placeholder">No completed tasks</div>
+        }
+      </div>
+
     </thead>
     <tbody>
     </tbody>
