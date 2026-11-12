@@ -1,3 +1,10 @@
+# TODOS
+Major implementations for this project is done.
+
+TODO is polish css for buttons, error alerts and todo cards.
+
+
+
 # Todofront
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.
