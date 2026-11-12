@@ -43,19 +43,19 @@ export class TodoComponent implements OnInit{
     return items.filter(
       (todo) => todo.name?.toLowerCase().includes(name) || todo.description?.toLowerCase().includes(name)
     );
-  })
+  });
 
   readonly pausedTodos = computed(() =>
     this.filteredTodos().filter((todo) => todo.status === 'PAUSED')
   );
 
-  readonly ongoingTodos = computed(() => {
+  readonly ongoingTodos = computed(() =>
     this.filteredTodos().filter((todo) => todo.status === 'ONGOING')
-  });
+  );
 
-  readonly doneTodos = computed(() => {
+  readonly doneTodos = computed(() =>
     this.filteredTodos().filter((todo) => todo.status === 'DONE')
-  });
+  );
 
 
   ngOnInit(): void {
@@ -119,9 +119,14 @@ export class TodoComponent implements OnInit{
     });
   }
 
-  delete(id : number): void{
+  delete(id : number | undefined): void{
+    if(id === undefined) return;
+
+    this.todoCatalogErrorMessage.set('');
+
     // TODO: Check removed and reorder IDs.
       this.todoService.deleteTodo(id).subscribe(({
+        next: () => {},
         error: () => this.todoCatalogErrorMessage.set('Couldnt delete todo'),
       }));
   }
